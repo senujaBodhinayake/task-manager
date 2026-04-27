@@ -1,14 +1,19 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+let _ratelimit: Ratelimit | null = null;
 
-// Max 10 requests per 60 seconds per IP
-export const authRatelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(10, '60 s'),
-  analytics: true,
-});
+export function getAuthRatelimit(): Ratelimit {
+  if (!_ratelimit) {
+    const redis = new Redis({
+      url: process.env.UPSTASH_REDIS_REST_URL!,
+      token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+    });
+    _ratelimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(10, '60 s'),
+      analytics: true,
+    });
+  }
+  return _ratelimit;
+}
