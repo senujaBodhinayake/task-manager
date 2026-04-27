@@ -13,13 +13,13 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-      <Link href="/dashboard" className="text-xl font-bold text-blue-600">
+    <nav className="sticky top-0 z-40 w-full backdrop-blur-md bg-slate-950/50 border-b border-white/10 px-6 py-4 flex items-center justify-between transition-all duration-300">
+      <Link href="/dashboard" className="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 drop-shadow-sm hover:opacity-80 transition-opacity">
         TaskManager
       </Link>
       <button
         onClick={handleLogout}
-        className="text-sm text-gray-500 hover:text-red-500 transition"
+        className="px-4 py-2 text-sm font-medium text-slate-300 bg-white/5 border border-white/10 rounded-full hover:bg-white/10 hover:text-white hover:border-white/20 transition-all duration-300 shadow-sm active:scale-95"
       >
         Logout
       </button>

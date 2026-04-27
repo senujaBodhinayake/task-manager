@@ -34,33 +34,44 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <h1 className="text-2xl font-bold text-gray-800 mb-6">Create account</h1>
+    <div className="min-h-screen flex items-center justify-center relative px-4">
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/20 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px] pointer-events-none -translate-x-1/4 translate-y-1/4" />
+      
+      <div className="bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl border border-white/10 shadow-2xl shadow-black/50 w-full max-w-md relative z-10 overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500" />
+        
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-indigo-400 tracking-tight">Create Account</h1>
+          <p className="text-slate-400 text-sm mt-2 font-medium">Join us and start managing tasks</p>
+        </div>
 
         {error && (
-          <div className="bg-red-50 text-red-600 text-sm p-3 rounded-lg mb-4">
+          <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-4 rounded-xl mb-6 flex items-center gap-3">
+            <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" /></svg>
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">Email address</label>
             <input
               type="email" required
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="name@company.com"
+              className="w-full bg-slate-950/50 border border-white/10 text-slate-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all placeholder:text-slate-600"
               value={form.email}
               onChange={e => setForm({ ...form, email: e.target.value })}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password <span className="text-gray-400 font-normal">(min 8 characters)</span>
+            <label className="block text-sm font-medium text-slate-300 mb-1.5">
+              Password <span className="text-slate-500 font-normal ml-1">(min 8 chars)</span>
             </label>
             <input
               type="password" required minLength={8}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="••••••••"
+              className="w-full bg-slate-950/50 border border-white/10 text-slate-100 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all placeholder:text-slate-600"
               value={form.password}
               onChange={e => setForm({ ...form, password: e.target.value })}
             />
@@ -68,15 +79,15 @@ export default function RegisterPage() {
 
           <button
             type="submit" disabled={isLoading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
+            className="w-full bg-gradient-to-r from-pink-500 to-purple-600 text-white py-3 rounded-xl font-bold hover:opacity-90 disabled:opacity-50 transition-all shadow-lg shadow-purple-500/25 mt-2 active:scale-[0.98]"
           >
-            {isLoading ? 'Creating account...' : 'Create account'}
+            {isLoading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
 
-        <p className="text-sm text-center text-gray-500 mt-4">
+        <p className="text-sm text-center text-slate-400 mt-8 font-medium">
           Already have an account?{' '}
-          <Link href="/login" className="text-blue-600 hover:underline">Sign in</Link>
+          <Link href="/login" className="text-pink-400 hover:text-pink-300 transition-colors">Sign in here</Link>
         </p>
       </div>
     </div>
