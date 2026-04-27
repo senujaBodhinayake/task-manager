@@ -28,7 +28,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const updated = await Task.findByIdAndUpdate(id, body, { new: true });
     return NextResponse.json(updated);
-  } catch (e: any) {
+  } catch (e: unknown) {
     if (e instanceof z.ZodError) return NextResponse.json({ error: e.issues }, { status: 400 });
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }

@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     await connectDB();
     const task = await Task.create({ ...body, userId });
     return NextResponse.json(task, { status: 201 });
-  } catch (e: any) {
+  } catch (e: unknown) {
     if (e instanceof z.ZodError) return NextResponse.json({ error: e.issues }, { status: 400 });
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
