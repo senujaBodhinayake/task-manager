@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/authContext';
 import { Task, CreateTaskInput, UpdateTaskInput } from '@/types';
@@ -18,17 +18,13 @@ export default function DashboardPage() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [saving, setSaving]         = useState(false);
 
-  // Redirect if not logged in
+ // Fix 1 — redirect effect
   useEffect(() => {
     if (!authLoading && !accessToken) router.push('/login');
-  }, [accessToken, authLoading]);
+  }, [accessToken, authLoading, router]); // ← add router
 
-  // Fetch tasks
-  useEffect(() => {
-    if (accessToken) fetchTasks();
-  }, [accessToken]);
 
-  async function fetchTasks() {
+  const fetchTasks = useCallback(async () => {
     try {
       setIsLoading(true);
       const res = await fetch('/api/tasks', {
@@ -42,8 +38,11 @@ export default function DashboardPage() {
     } finally {
       setIsLoading(false);
     }
-  }
+  }, [accessToken]); // ← accessToken is the dependency
 
+  useEffect(() => {
+    if (accessToken) fetchTasks();
+  }, [accessToken, fetchTasks]); // ← add fetchTasks
   async function handleCreate(data: CreateTaskInput | UpdateTaskInput) {
     setSaving(true);
     try {
