@@ -37,9 +37,8 @@ export default function LoginPage() {
 
       login(data.accessToken);
       router.push('/dashboard');
-    } catch (e: any) {
-      console.error('Login fetch error:', e.message);
-      setError('Something went wrong. Please try again.');
+    } catch {
+  setError('Something went wrong. Please try again.');
     } finally {
       setIsLoading(false);
     }

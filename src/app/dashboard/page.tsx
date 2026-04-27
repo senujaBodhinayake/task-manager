@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/authContext';
 import { Task, CreateTaskInput, UpdateTaskInput } from '@/types';
@@ -18,13 +18,13 @@ export default function DashboardPage() {
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [saving, setSaving]         = useState(false);
 
- // Fix 1 — redirect effect
   useEffect(() => {
     if (!authLoading && !accessToken) router.push('/login');
   }, [accessToken, authLoading, router]); // ← add router
 
-
-  const fetchTasks = useCallback(async () => {
+  useEffect(() => {
+  if (!accessToken) return;
+  const loadTasks = async () => {
     try {
       setIsLoading(true);
       const res = await fetch('/api/tasks', {
@@ -38,11 +38,28 @@ export default function DashboardPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [accessToken]); // ← accessToken is the dependency
+  };
+  loadTasks();
+}, [accessToken]);
 
-  useEffect(() => {
-    if (accessToken) fetchTasks();
-  }, [accessToken, fetchTasks]); // ← add fetchTasks
+async function fetchTasks() {
+  try {
+    setIsLoading(true);
+    const res = await fetch('/api/tasks', {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    if (!res.ok) throw new Error('Failed to fetch');
+    const data = await res.json();
+    setTasks(data);
+  } catch {
+    setError('Failed to load tasks. Please refresh.');
+  } finally {
+    setIsLoading(false);
+  }
+}
+
+ 
+  
   async function handleCreate(data: CreateTaskInput | UpdateTaskInput) {
     setSaving(true);
     try {
