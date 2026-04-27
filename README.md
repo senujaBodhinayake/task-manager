@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Task Manager
 
-## Getting Started
+A full-stack task management system built with Next.js 15, TypeScript, MongoDB Atlas, and JWT authentication.
 
-First, run the development server:
+## Live Demo
+[https://task-manager-rust-phi.vercel.app](https://task-manager-rust-phi.vercel.app)
 
+## Tech Stack
+- **Frontend:** Next.js 15 (App Router), TypeScript, Tailwind CSS
+- **Backend:** Next.js API Routes (serverless)
+- **Database:** MongoDB Atlas via Mongoose ODM
+- **Auth:** JWT — access token in memory, refresh token in HttpOnly cookie
+- **Rate Limiting:** Upstash Redis (@upstash/ratelimit)
+- **Validation:** Zod (client + server)
+- **CI/CD:** GitHub Actions — lint, build, Docker
+- **Deployment:** Vercel + Docker
+
+## Features
+- User registration and login with JWT authentication
+- Access token in memory, refresh token in HttpOnly cookie
+- Full task CRUD (Create, Read, Update, Delete)
+- Kanban-style dashboard (To Do / In Progress / Done)
+- Route protection — users can only access their own tasks
+- Rate limiting on all auth endpoints (10 req / 60s per IP)
+- Loading skeletons and error states
+- Dockerized with multi-stage build
+- GitHub Actions CI — lint, TypeScript check, build, Docker build
+
+## Security
+- Passwords hashed with bcryptjs (cost factor 12)
+- JWT access token in React state only — never localStorage
+- Refresh token in HttpOnly, Secure, SameSite=Strict cookie
+- Rate limiting via Upstash Redis sliding window
+- Zod input validation on client and server
+- Mongoose parameterized queries — no NoSQL injection
+- No stack traces exposed in production
+
+## Local Setup
+
+### Prerequisites
+- Node.js v20+
+- MongoDB Atlas account
+- Upstash account
+
+### Installation
+
+1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/senujaBodhinayake/task-manager.git
+cd task-manager
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Copy environment file
+```bash
+cp .env.example .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Fill in your `.env.local` values (see Environment Variables below)
 
-## Learn More
+5. Run the dev server
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+6. Open [http://localhost:3000](http://localhost:3000)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Description |
+|----------|-------------|
+| `MONGODB_URI` | MongoDB Atlas connection string |
+| `JWT_ACCESS_SECRET` | Secret for signing access tokens |
+| `JWT_REFRESH_SECRET` | Secret for signing refresh tokens |
+| `UPSTASH_REDIS_REST_URL` | Upstash Redis REST URL (https://...) |
+| `UPSTASH_REDIS_REST_TOKEN` | Upstash Redis REST token |
 
-## Deploy on Vercel
+## API Endpoints
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Auth
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login — returns access token |
+| POST | `/api/auth/refresh` | Refresh access token |
+| POST | `/api/auth/logout` | Clear refresh token cookie |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Tasks (all protected)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/tasks` | Get all tasks for logged in user |
+| POST | `/api/tasks` | Create a new task |
+| PUT | `/api/tasks/:id` | Update a task (owner only) |
+| DELETE | `/api/tasks/:id` | Delete a task (owner only) |
+
+## Docker
+
+```bash
+# Run with Docker Compose
+docker compose up --build
+```
+
+## CI/CD Pipeline
+- **Lint & Type Check** — ESLint + tsc on every push
+- **Build** — Next.js production build
+- **Docker Build** — multi-stage image build with layer caching
