@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import { connectDB } from '@/lib/mongodb';
 import User from '@/models/User';
 import { z } from 'zod';
-import { authRatelimit } from '@/lib/ratelimit';
+import { getAuthRatelimit } from '@/lib/ratelimit';
 
 const schema = z.object({
   email:    z.string().email(),
@@ -13,7 +13,7 @@ const schema = z.object({
 export async function POST(req: NextRequest) {
   // Rate limiting
   const ip = req.headers.get('x-forwarded-for') ?? 'anonymous';
-  const { success } = await authRatelimit.limit(ip);
+  const { success } = await getAuthRatelimit().limit(ip);
   if (!success) {
     return NextResponse.json(
       { error: 'Too many requests. Please try again later.' },
