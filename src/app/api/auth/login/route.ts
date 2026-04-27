@@ -43,9 +43,10 @@ export async function POST(req: NextRequest) {
       maxAge: 60 * 60 * 24 * 7,
     });
     return res;
-  } catch (e: any) {
+  } catch (e: unknown) {
     if (e instanceof z.ZodError) return NextResponse.json({ error: e.issues }, { status: 400 });
-    console.error('LOGIN ERROR:', e.message);
+    const message = e instanceof Error ? e.message : 'Unknown error';
+    console.error('LOGIN ERROR:', message);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

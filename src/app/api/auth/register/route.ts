@@ -32,9 +32,10 @@ export async function POST(req: NextRequest) {
     await User.create({ email: body.email, password: hashed });
 
     return NextResponse.json({ message: 'Account created' }, { status: 201 });
-  } catch (e: any) {
+  }  catch (e: unknown) {
     if (e instanceof z.ZodError) return NextResponse.json({ error: e.issues }, { status: 400 });
-    console.error('REGISTER ERROR:', e.message);
+    const message = e instanceof Error ? e.message : 'Unknown error';
+    console.error('REGISTER ERROR:', message);
     return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }
