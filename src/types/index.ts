@@ -23,6 +23,7 @@ export interface Task {
   userId: string;
   title: string;
   description: string;
+  due_date?: string;
   status: TaskStatus;
   createdAt: string;
   updatedAt: string;
@@ -32,12 +33,14 @@ export interface CreateTaskInput {
   title: string;
   description?: string;
   status?: TaskStatus;
+  due_date?: string;
 }
 
 export interface UpdateTaskInput {
   title?: string;
   description?: string;
   status?: TaskStatus;
+  due_date?: string;
 }
 
 // ── API Responses ──────────────────────────────────

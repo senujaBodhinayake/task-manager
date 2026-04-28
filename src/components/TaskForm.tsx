@@ -7,6 +7,7 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading }:
     title:       initialData?.title       || '',
     description: initialData?.description || '',
     status:      initialData?.status      || 'todo',
+    due_date:    initialData?.due_date    || '',
   });
   const [error, setError] = useState('');
 
@@ -59,18 +60,32 @@ export default function TaskForm({ initialData, onSubmit, onCancel, isLoading }:
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-slate-300 mb-1.5">Status</label>
-            <select
-              className="w-full bg-slate-950/50 border border-white/10 text-slate-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all appearance-none"
-              style={{ backgroundImage: 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e")', backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em' }}
-              value={form.status}
-              onChange={e => setForm({ ...form, status: e.target.value as CreateTaskInput['status'] })}
-            >
-              <option value="todo" className="bg-slate-900 text-slate-100">To Do</option>
-              <option value="in-progress" className="bg-slate-900 text-slate-100">In Progress</option>
-              <option value="done" className="bg-slate-900 text-slate-100">Done</option>
-            </select>
+           <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-1.5">Status</label>
+              <select
+                className="w-full bg-slate-950/50 border border-white/10 text-slate-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all appearance-none"
+                style={{ backgroundImage: 'url("data:image/svg+xml,%3csvg xmlns=\'http://www.w3.org/2000/svg\' fill=\'none\' viewBox=\'0 0 20 20\'%3e%3cpath stroke=\'%236b7280\' stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'1.5\' d=\'M6 8l4 4 4-4\'/%3e%3c/svg%3e")', backgroundPosition: 'right 0.5rem center', backgroundRepeat: 'no-repeat', backgroundSize: '1.5em 1.5em' }}
+                value={form.status}
+                onChange={e => setForm({ ...form, status: e.target.value as CreateTaskInput['status'] })}
+              >
+                <option value="todo" className="bg-slate-900 text-slate-100">To Do</option>
+                <option value="in-progress" className="bg-slate-900 text-slate-100">In Progress</option>
+                <option value="done" className="bg-slate-900 text-slate-100">Done</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-1.5">
+                Due date <span className="text-slate-500 font-normal text-xs">(optional)</span>
+              </label>
+              <input
+                type="date"
+                className="w-full bg-slate-950/50 border border-white/10 text-slate-100 rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all [color-scheme:dark]"
+                value={form.due_date}
+                onChange={e => setForm({ ...form, due_date: e.target.value })}
+              />
+            </div>
           </div>
 
           <div className="flex gap-3 pt-4">

@@ -14,6 +14,7 @@ const taskSchema = z.object({
   title:       z.string().min(1).max(100),
   description: z.string().max(500).optional(),
   status:      z.enum(['todo', 'in-progress', 'done']).optional(),
+  due_date:    z.string().optional(),
 });
 
 export async function GET(req: NextRequest) {

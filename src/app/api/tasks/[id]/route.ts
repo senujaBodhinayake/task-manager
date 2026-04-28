@@ -14,6 +14,7 @@ const updateSchema = z.object({
   title:       z.string().min(1).max(100).optional(),
   description: z.string().max(500).optional(),
   status:      z.enum(['todo', 'in-progress', 'done']).optional(),
+  due_date:    z.string().optional(),
 });
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
